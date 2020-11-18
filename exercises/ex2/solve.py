@@ -40,7 +40,6 @@ def question1a():
 def question1b():
     return 0
 
-
 if __name__ == "__main__":
     question1a()
     question1b()
