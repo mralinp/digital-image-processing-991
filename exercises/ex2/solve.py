@@ -38,8 +38,44 @@ def question1a():
 
 
 def question1b():
-    return 0
+    histogram1 = \
+        [0 for i in range(64)] +\
+        [1/128 for i in range(128)] +\
+        [0 for i in range(64)]
+    histogram2 = \
+        [1/200 for i in range(100)] +\
+        [0 for i in range(55)] +\
+        [1/200 for i in range(101)]
+    print(histogram2[155], histogram2[154])
+    for i in range(1, 256):
+        histogram1[i] = histogram1[i] + histogram1[i-1]
+        histogram2[i] = histogram2[i] + histogram2[i-1]
+    for i in range(256):
+        histogram1[i] *= 255
+        histogram2[i] *= 255
+    print(histogram1)
+    plt.figure("question2")
+    plt.subplot(1, 2, 1)
+    plt.plot(histogram1)
+    plt.xlim(0, 255)
+    plt.subplot(1, 2, 2)
+    plt.plot(histogram2)
+    plt.show()
+
+
+def question1c():
+    pic = [5, 3, 3, 5, 1, 6, 4, 3, 3, 9, 7, 7, 9]
+    kernel = [-1, -2, 5, -1, -1]
+    res = [0 for i in range(9)]
+    for i in range(2, 10):
+        for j in range(5):
+            res[i-2] += pic[i+j-2]*kernel[j]
+        if (res[i-2] < 0):
+            res[i-2] = 0
+    print(res)
+
 
 if __name__ == "__main__":
-    question1a()
-    question1b()
+    # question1a()
+    # question1b()
+    question1c()
