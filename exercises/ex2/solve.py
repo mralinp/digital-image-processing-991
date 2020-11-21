@@ -12,7 +12,7 @@ def question1a():
     plt.subplot(121)
     plt.title("Original Histogram")
     plt.xlabel("color value")
-    plt.ylabel("color count")
+    plt.ylabel("pixel count")
     plt.bar(colors, hist, width=0.4)
     accumilator = [0]
     for i in hist:
@@ -38,8 +38,32 @@ def question1a():
 
 
 def question1b():
+    hist1 = \
+        [0 for i in range(64)] + \
+        [1/128 for i in range(64,192)] +\
+        [0 for i in range(192, 256)]
+    hist2 = \
+        [1/200 for i in range(100)] +\
+        [0 for i in range(100,155)]+\
+        [1/200 for i in range(155,256)]
+    accumilator1 = [0]
+    accumilator2 = [0]
+    for i in hist1:
+        accumilator1 += [(accumilator1[-1] + i)]
+    accumilator1 = accumilator1[1:]
+    for i in hist2:
+        accumilator2 += [(accumilator2[-1] + i)]
+    accumilator2 = accumilator2[1:]
+    for i in range(len(accumilator1)):
+        accumilator1[i] = [int((127/256)*accumilator1[i])]
+    for i in range(len(accumilator2)):
+        accumilator2[i] = [int((200/256)*accumilator2[i])]
+    print (accumilator2)
+    plt.plot(accumilator2)
+    plt.show()
+    
     return 0
 
 if __name__ == "__main__":
-    question1a()
+    # question1a()
     question1b()
