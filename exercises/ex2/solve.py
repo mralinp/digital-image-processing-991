@@ -64,6 +64,20 @@ def question1b():
     
     return 0
 
+def question1c():
+    pic = [5, 3, 3, 5, 1, 6, 4, 3, 3, 9, 7, 7, 9]
+    kernel = [-1, -2, 5, -1, -1]
+    res = [0 for i in range(9)]
+    for i in range(2, 10):
+        for j in range(5):
+            res[i-2] += pic[i+j-2]*kernel[j]
+        if (res[i-2] < 0):
+            res[i-2] = 0
+    print(res)
+
+
 if __name__ == "__main__":
     # question1a()
-    question1b()
+    # question1b()
+    question1c()
+

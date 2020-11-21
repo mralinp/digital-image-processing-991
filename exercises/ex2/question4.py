@@ -1,10 +1,22 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import cv2
+import cv2 as cv
+from math import exp
 
 # implement a function that returns a gaussian kernel
+
+def gaussian(s,t, std=1):
+    x = (s*s + t*t)/(2*std*std)
+    return exp(-x)
 def make_gaussian(size=3, std=1):
-    # Your code here
+    kernel = np.zeros((size, size), np.float32)
+    k = 0
+    if(size%2 != 0):
+        for s in range(-int(size/2), int(size/2) + 1, 1):
+            for t in range(-int(size/2), int(size/2) + 1, 1):
+                kernel[int(size/2) + s, int(size/2) + t] = gaussian(s,t,std)
+                k += kernel[int(size/2) + s, int(size/2) + t]
+        kernel = kernel/k
     return kernel
 
 # implement a 2D convolution
@@ -19,10 +31,31 @@ def convolve2d(image, kernel):
     # Add zero padding to the input image
     image_padded = np.zeros((image.shape[0] + padding, image.shape[1] + padding))   
     image_padded[offset:-offset, offset:-offset] = image
-
     # implement the convolution inside the inner for loop
-    for y in range(image.shape[0]):
-        for x in range(image.shape[1]):
-            # Convolution - Your code here
-            continue
+    size = kernel.shape[0]//2
+    percent = 0
+    tmp = 0
+    for x in range(image.shape[0]):
+        percent = 100*(x/image.shape[0])
+        if(percent-tmp > 1):
+            print("%.2s" % percent)
+            tmp = percent
+        for y in range(image.shape[1]):
+            for s in range(-size, size+1, 1):
+                for t in range(-size, size+1, 1):
+                    r += kernel[size+s, size+t]*image_padded[x+s, y+t]
+            output[x,y] = int(output[x,y])
     return output
+
+if __name__ == "__main__":
+    gray_img = cv.imread("./Azadi.jpg", cv.IMREAD_GRAYSCALE)
+    img = 255-gray_img
+    # bllured = convolve2d(img, make_gaussian(19,3))
+    bllured = cv.filter2D(img, -1, make_gaussian(19,3))
+    # cv.imwrite("./azadi_blured.jpg", bllured)
+    # bllured = cv.imread("./azadi_blured.jpg", cv.IMREAD_GRAYSCALE)
+    cv.imshow("blured", bllured)
+    res = cv.divide(gray_img, 255-bllured, scale=256)
+    cv.imshow("result", res)
+    cv.waitKey()
+    cv.destroyAllWindows()
