@@ -36,11 +36,8 @@ def convolve2d(image, kernel):
     percent = 0
     tmp = 0
     for x in range(image.shape[0]):
-        percent = 100*(x/image.shape[0])
-        if(percent-tmp > 1):
-            print("%.2s" % percent)
-            tmp = percent
         for y in range(image.shape[1]):
+            r = 0
             for s in range(-size, size+1, 1):
                 for t in range(-size, size+1, 1):
                     r += kernel[size+s, size+t]*image_padded[x+s, y+t]
@@ -52,10 +49,6 @@ if __name__ == "__main__":
     img = 255-gray_img
     # bllured = convolve2d(img, make_gaussian(19,3))
     bllured = cv.filter2D(img, -1, make_gaussian(19,3))
-    # cv.imwrite("./azadi_blured.jpg", bllured)
-    # bllured = cv.imread("./azadi_blured.jpg", cv.IMREAD_GRAYSCALE)
-    cv.imshow("blured", bllured)
+    cv.imwrite("./azadi_blured.jpg", bllured)
     res = cv.divide(gray_img, 255-bllured, scale=256)
-    cv.imshow("result", res)
-    cv.waitKey()
-    cv.destroyAllWindows()
+    cv.imwrite("./azadi_pencil_sketch.jpg", res)
