@@ -15,28 +15,31 @@ quantize_matrix = np.array([[16, 11, 10, 16, 24, 40, 51, 61],
 sequence = [-40.0, 8.0, 7.0, 1.0, 5.0, 1.0, -
             1.0, 1.0, 1.0, -1.0, 0.0, -0.0, 1.0, 'EOB']
 
+
 def sequence_to_block(sequence):
-    
+
     width = 8
     height = 8
-    decodedSequence = np.array([[0 for i in range(width)] for j in range(height)])
-    currentPos = (0,0)
+    decodedSequence = np.array([[0 for i in range(width)]
+                                for j in range(height)])
+    currentPos = (0, 0)
     direction = (-1, 1)
-    for i in range (len(sequence)-1):
+    for i in range(len(sequence)-1):
         decodedSequence[currentPos[0], currentPos[1]] = sequence[i]
         newPos = tuple(map(lambda x, y: x+y, currentPos, direction))
         if(newPos[0] < 0 or newPos[1] < 0 or newPos[0] > height or newPos[1] > width):
-            if(direction == (-1,1)):
-                newPos = tuple(map(lambda x,y:x+y, (0,1), currentPos))
+            if(direction == (-1, 1)):
+                newPos = tuple(map(lambda x, y: x+y, (0, 1), currentPos))
                 if(newPos[1] > width):
-                    newPos =tuple(map(lambda x, y: x+y, (+1, 0), currentPos))
+                    newPos = tuple(map(lambda x, y: x+y, (+1, 0), currentPos))
             elif(direction == (1, -1)):
-                newPos =tuple(map(lambda x, y: x+y, (+1, 0), currentPos))
+                newPos = tuple(map(lambda x, y: x+y, (+1, 0), currentPos))
                 if(newPos[0] > height):
-                    newPos =tuple(map(lambda x, y: x+y, (0, +1), currentPos))          
-            direction = tuple(map(lambda x, y: x*y, (-1,-1), direction))   
-        currentPos = newPos 
+                    newPos = tuple(map(lambda x, y: x+y, (0, +1), currentPos))
+            direction = tuple(map(lambda x, y: x*y, (-1, -1), direction))
+        currentPos = newPos
     return decodedSequence
+
 
 def inverse_transform(block):
     width = 8
@@ -47,6 +50,7 @@ def inverse_transform(block):
     block = np.uint8(block)
     block = block + 128
     cv.imwrite("Q2.bmp", block)
+
 
 if __name__ == "__main__":
     inverse_transform(sequence_to_block(sequence))
